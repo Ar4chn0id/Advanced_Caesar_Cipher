@@ -1,23 +1,11 @@
-#metinde en çok geçen ve en az geçen harfi bul
-#bu karakterleri rastgele 3 veya 2 sayıda olan karakter dizileri ile değiştir.(eğer en az geçen harfe denk gelmişse "1"veya"3" ve yanına 3 boyutunda rastgele karakterler, en çok geçen harfe denk gelmişse 0-9(1 ve 3 hariç) arasında rastgele bir sayı ve yanına 2 boyutunda rastgele karakterler gelecek. )
-#geri kalan harfleri metinde bulunduğu konumun indexi tekse 5 eksiği kadar çiftse 6 fazlası kadar kaydır.
-#anahtarı şifreli metnin başına ve sonuna ekle.(en çok bulunan karakter başa en az bulunan karakter sona)
-
 import random
+import sys
 
-metin="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, porro? Quas reiciendis quo facilis vel unde hic! Obcaecati ipsa et in cum a ea quo iste, minima tenetur, aspernatur quas."
-
-metin2="""Ne mutlu Türküm ağşçöm 
-
-Diyene!!!"""
-
-metin3="Bura Boyabat. Bakacağız!"
-metin4="ABBCCCDDDEEEEE"
+ExampleText="Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, porro? Quas reiciendis quo facilis vel unde hic! Obcaecati ipsa et in cum a ea quo iste, minima tenetur, aspernatur quas."
 
 def Advanced_caesar_encrypt(text):
 
     def en_cok_en_az_karakterler(string):
-        #excpt="!'^+%&/(\\)=?_<>£#$½{\n[]}\|`,.: ~´\"0123456789"
         karakter_sayilari = {}
         
         for karakter in string:
@@ -39,10 +27,9 @@ def Advanced_caesar_encrypt(text):
     sifrelimetin=""
 
     encok, enaz = en_cok_en_az_karakterler(text)
-    #encryption_key = encok + enaz + replacement_characters_max + replacement_characters_min
     
     text=text.replace("ü","u").replace("ı","i").replace("ğ","g").replace("ö","o").replace("ş","s").replace("ç","c")
-    print("şifrelenecek metin:",text)
+
     kaydirma_miktari=0
     for i in text:
 
@@ -83,25 +70,39 @@ def Advanced_caesar_decrypt(ciphertxt):
                 deshifted_char = chr(((ord(char) - ord('a') - indexno + 5) % 26) + ord('a'))
                 dcrptxt += deshifted_char
             indexno += 1
-            #*print("arttırma işlemi")
         else:
             if char == "1" or char == "3":
                 dcrptxt += enaz
                 ciphertxt = ciphertxt[:indexno+1] + ciphertxt[indexno + 4:]
-                #*print("en az bulunan harf")
                 indexno+=1
             else:
                 dcrptxt += encok
                 ciphertxt = ciphertxt[:indexno+1] +ciphertxt[indexno + 3:]
-                #*print("en çok bulunan harf", indexno)
                 indexno+=1
-                #ciphertxt = ciphertxt[:indexno] + " " + ciphertxt[indexno:]
     return dcrptxt
 
+flag = sys.argv[1]
 
-cprtxt = Advanced_caesar_encrypt(metin4)
-print("şifreli: ", cprtxt)
-print("decrypt",Advanced_caesar_decrypt(cprtxt))
+if flag == "-e":
+    with open(sys.argv[2], 'r') as file:
+        userinput = file.read()
+    with open('encrypted.txt', 'w') as file:
+        file.write(Advanced_caesar_encrypt(userinput))
+elif flag == "-d":
+    with open(sys.argv[2], 'r') as file:
+        userinput = file.read()
+    with open('decrypted.txt', 'w') as file:
+        file.write(Advanced_caesar_decrypt(userinput))
+elif flag=="-h":
+    print("Usage: program.py <flag> example.txt")
+    print("flag: -e for encrypt, -d for decrypt" )
+else:
+    print("Wrong flag: -e for encrypt, -d for decrypt" )
+    print("Usage: program.py <flag> example.txt")
+
+
+
+
 
 
 
